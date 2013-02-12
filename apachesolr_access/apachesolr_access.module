@@ -11,6 +11,10 @@ function apachesolr_access_apachesolr_index_document_build_node($document, $node
     $account = drupal_anonymous_user();
   }
 
+  // if it's a comment, check access to parent
+  if ($node->comment_target_nid != null) {
+    $node = node_load($node->comment_target_nid);
+  }
   if (!node_access('view', $node, $account)) {
     // Get node access grants.
     $query = "SELECT * FROM {node_access} WHERE (nid = 0 OR nid = %d AND grant_view = 1)";
